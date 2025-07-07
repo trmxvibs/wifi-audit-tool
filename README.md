@@ -45,7 +45,7 @@ WiFi Auditing Tool is a command-line toolkit designed for ethical hackers, penet
 **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/wifi-audit-tool.git
+git clone https://github.com/trmxvibs/wifi-audit-tool.git
 cd wifi-audit-tool
 ```
 
