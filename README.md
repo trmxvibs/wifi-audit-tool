@@ -117,7 +117,7 @@ python3 wifi_audit.py
 
 ## Directory Structure
 
-```plaintext
+```sql
 wifi-audit-tool/
 │
 ├── README.md
@@ -153,7 +153,7 @@ This project is licensed under the MIT License.
 
 ## Credits
 
-Developed by [Your Name].  
+Developed by [Lokesh_Kumar].  
 Inspired by open-source security research and the ethical hacking community.
 
 ---
