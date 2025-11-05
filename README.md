@@ -1,159 +1,64 @@
-# WiFi Auditing Tool
+# 🛡️ WiFi Auditing Tool 
 
-**Compatible with Termux (Android), Kali Linux, and WSL (Windows Subsystem for Linux)**
+<p align="center">
+  <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/trmxvibs/wifi-audit-tool/python-app.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white">
+  <img alt="Python Version" src="https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python">
+  <img alt="License" src="https://img.shields.io/github/license/trmxvibs/wifi-audit-tool?style=for-the-badge&color=yellow">
+  <br>
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/trmxvibs/wifi-audit-tool?style=for-the-badge&color=blueviolet">
+  <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/trmxvibs/wifi-audit-tool?style=for-the-badge">
+  <img alt="GitHub issues" src="https://img.shields.io/github/issues/trmxvibs/wifi-audit-tool?style=for-the-badge&color=green&logo=github">
+</p>
 
----
-
-## Overview
-
-WiFi Auditing Tool is a command-line toolkit designed for ethical hackers, penetration testers, and network security enthusiasts. This tool simplifies the process of scanning WiFi networks, capturing handshakes, performing basic network vulnerability analysis, and generating reports—all through an easy-to-use interactive menu.
-
-> **Warning:**  
-> This tool is intended for educational and authorized penetration testing **only**.  
-> **Never** use it on networks without explicit permission from the owner.  
-> Illegal and unauthorized use is strictly prohibited and may result in criminal prosecution.
-
----
-
-## Features
-
-- **WiFi Network Scanning**  
-  Detects nearby wireless networks, showing SSID, signal strength, and security protocol.
-
-- **AI-Powered Recommendations**  
-  Suggests potentially vulnerable or insecure networks based on scan results.
-
-- **Handshake Capture**  
-  Initiates WPA/WPA2 handshake capture (requires monitor mode and root access).
-
-- **Vulnerability Summary Report**  
-  Generates a summary of detected risks (e.g., open networks, WEP, WPS enabled).
-
-- **Scan History**  
-  Maintains local logs of previous scans and actions.
-
-- **Automatic Dependency Checking**  
-  Installs and verifies required packages and dependencies.
-
-- **User-Friendly Interface**  
-  Colorful, interactive CLI menu for simple navigation.
+A command-line toolkit designed for ethical hackers and network security enthusiasts using Kali Linux. This tool simplifies scanning WiFi networks, capturing handshakes, and generating crack commands through an easy-to-use, interactive menu.
 
 ---
 
-## Installation
+> [!CAUTION]
+> ## 🛑 Ethical Hacking Disclaimer
+>
+> This tool is intended for **educational purposes and authorized security testing ONLY**.
+>
+> Using this tool on networks without explicit, written permission from the owner is **illegal**. The developer is not responsible for any misuse or damage caused by this program. **Use responsibly.**
 
-**1. Clone the Repository**
+---
+
+## 🚀 Key Features
+
+* **Automatic Monitor Mode:** Automatically enables and disables monitor mode on your wireless adapter.
+* **Network Scanning:** Scans for all nearby WiFi networks using `airodump-ng`.
+* **WPA/WPA2 Handshake Capture:** Easily targets a specific network (by BSSID and channel) to capture WPA/WPA2 handshakes.
+
+---
+
+## 🛠️ Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/trmxvibs/wifi-audit-tool.git
+    cd wifi-audit-tool
+    ```
+
+2.  Make the install script executable:
+    ```bash
+    chmod +x install.sh
+    ```
+
+3.  Run the installer (this will use `sudo` to install dependencies):
+    ```bash
+    ./install.sh
+    ```
+
+---
+
+## ⚡ Usage & Example Workflow
+
+Always run the tool with `sudo` (root) privileges:
 
 ```bash
-git clone https://github.com/trmxvibs/wifi-audit-tool.git
-cd wifi-audit-tool
+sudo python3 wifi_audit.py
 ```
 
-**2. Run the Installer**
 
-```bash
-chmod +x install.sh
-./install.sh
-```
 
-*The installer will automatically detect your environment (Termux, Kali, WSL) and install all dependencies.*
 
----
-
-## Usage
-
-```bash
-python3 wifi_audit.py
-```
-
-*You must run with root privileges for full functionality (especially handshake capture).*
-
----
-
-## Requirements
-
-- Python 3.x
-- [aircrack-ng](https://www.aircrack-ng.org/)
-- [iw](https://wireless.wiki.kernel.org/en/users/documentation/iw)
-- [net-tools](https://wiki.linuxfoundation.org/networking/net-tools)
-- git
-
-**On Android (Termux), these can be installed using `pkg`**
-
-**On Kali Linux/WSL, use `apt`**
-
----
-
-## Main Menu
-
-1. **Scan WiFi Networks**  
-   Scan and list available WiFi networks.
-
-2. **Capture Handshake**  
-   Initiate handshake capture for a selected network (requires compatible WiFi card and monitor mode).
-
-3. **Vulnerability Report**  
-   Generate a vulnerability assessment based on scan data.
-
-4. **Scan History**  
-   View logs of previous scans and actions.
-
-5. **Guidelines & Help**  
-   View usage guidelines, disclaimer, and troubleshooting help.
-
-6. **Exit**  
-   Quit the tool.
-
----
-
-## Ethical Guidelines & Disclaimer
-
-- **This tool is strictly for learning, research, and authorized penetration testing.**
-- Use only on networks you own or have written permission to test.
-- The authors and contributors are not responsible for any misuse or illegal actions.
-- By using this tool, you agree to comply with all local, state, and federal laws.
-
----
-
-## Directory Structure
-
-```sql
-wifi-audit-tool/
-│
-├── README.md
-├── install.sh
-├── requirements.txt
-├── wifi_audit.py
-├── modules/
-│   ├── scan.py
-│   ├── handshake.py
-│   └── report.py
-└── utils/
-    ├── helpers.py
-    └── ai_helper.py
-```
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/new-feature`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/new-feature`)
-5. Create a new Pull Request
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-## Credits
-
-Developed by [Lokesh_Kumar].  
-Inspired by open-source security research and the ethical hacking community.
-
----
