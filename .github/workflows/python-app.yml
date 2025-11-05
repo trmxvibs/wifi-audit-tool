@@ -1,7 +1,8 @@
 # .github/workflows/python-app.yml
 
-name: Python Application CI
-
+- name: Test with pytest
+        run: |
+          PYTHONPATH=. pytest
 # Controls when the workflow will run
 on:
   push:
