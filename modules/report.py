@@ -3,8 +3,10 @@ import os
 from utils.helpers import colorful_print
 
 def history():
+    """Shows previously captured .cap files."""
     colorful_print("Fetching capture history...", "cyan")
     
+    # Find all .cap files in the current directory
     cap_files = glob.glob('*.cap')
     
     if not cap_files:
@@ -16,8 +18,10 @@ def history():
         print(f"- {f}")
 
 def show():
+    """Generates the aircrack-ng command for a selected file."""
     colorful_print("Generate Crack Command / Report...", "cyan")
     
+    # Find .cap files (airodump adds '-01', '-02' etc)
     cap_files = glob.glob('*.cap')
     
     if not cap_files:
