@@ -15,9 +15,9 @@ A command-line toolkit designed for ethical hackers and network security enthusi
 ---
 
 > [!CAUTION]
-> ## 🛑 Ethical Hacking Disclaimer
+> ## 🛑Disclaimer
 >
-> This tool is intended for **educational purposes and authorized security testing ONLY**.
+> This tool is intended for **Authorized security testing ONLY**.
 >
 > Using this tool on networks without explicit, written permission from the owner is **illegal**. The developer is not responsible for any misuse or damage caused by this program. **Use responsibly.**
 
@@ -59,6 +59,19 @@ Always run the tool with `sudo` (root) privileges:
 sudo python3 wifi_audit.py
 ```
 
+## ⚠️ Troubleshooting & Common Errors
+- **Error: "Error detecting interfaces: Command ['iw', 'dev'] returned non-zero exit status 1"**
+- This is the most common error when running Kali Linux inside an Android/Termux environment (like Nethunter).
+
+- Cause: The Android OS security model blocks the Kali "guest" OS from directly accessing your phone's internal WiFi chip. The iw dev command cannot find any compatible hardware.
+
+- Solution: You cannot use your phone's built-in WiFi for this. You must use an external USB WiFi adapter.
+
+### Required Hardware:
+
+- OTG Adapter: A USB-C or Micro USB adapter to connect the USB adapter to your phone.
+
+- External WiFi Adapter: A USB WiFi adapter that is Kali-compatible and supports monitor mode (e.g., adapters with Atheros AR9271 or Ralink RT5370 chipsets).
 
 
 
