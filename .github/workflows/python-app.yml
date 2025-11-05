@@ -1,60 +1,58 @@
-# This is a GitHub Actions workflow file.
-# It defines a set of automated jobs to run for continuous integration (CI).
+# .github/workflows/python-app.yml
+
 name: Python Application CI
 
-# Controls when the workflow will run.
+# Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the "main" branch.
   push:
     branches: [ "main" ]
-  # Triggers the workflow on pull request events but only for the "main" branch.
   pull_request:
     branches: [ "main" ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel.
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This job is named "build".
+  # This job is named "build"
   build:
-    # The type of runner that the job will run on. We use the latest Ubuntu.
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
-    # Defines a build matrix for your jobs.
-    # This will run the same job for each Python version listed.
+
+    # Define a strategy for running the job with multiple Python versions
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10"]
 
-    # Steps represent a sequence of tasks that will be executed as part of the job.
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # 1. Checks out your repository under $GITHUB_WORKSPACE, so your job can access it.
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # Step 1: Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # 2. Sets up a specific version of Python for use in subsequent steps.
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      # Step 2: Set up a specific version of Python
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    # 3. Installs Python dependencies.
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest pytest-mock
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-    # 4. Lints code with Flake8.
-    #    Flake8 is a tool to check your Python code against some of the style conventions in PEP 8.
-    - name: Lint with Flake8
-      run: |
-        # Stop the build if there are Python syntax errors or undefined names.
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide.
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-        
-    # 5. Runs tests with Pytest.
-    #    This command will automatically discover and run the tests in your 'tests/' directory.
-    - name: Test with Pytest
-      run: |
-        pytest
+      # Step 3: Install dependencies
+      # It's good practice to upgrade pip first and install dependencies from a requirements file.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Step 4: Lint with flake8
+      # This step checks your code for style issues and simple errors.
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      # Step 5: Run tests with pytest
+      # This step runs the tests found in your repository.
+      - name: Test with pytest
+        run: |
+          pytest
