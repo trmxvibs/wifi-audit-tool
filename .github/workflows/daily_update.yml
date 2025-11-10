@@ -1,0 +1,46 @@
+name: Automated Daily Update
+
+on:
+  
+  schedule:
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  daily_update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Configure Git Credentials
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Create/Update Hidden Marker File
+        id: marker_update
+        run: |
+          MARKER_FILE=".daily_update_marker"
+          
+          echo "Last Auto-Update: $(date)" > ${MARKER_FILE}
+          
+          if git status --porcelain | grep -q "${MARKER_FILE}"; then
+            echo "::set-output name=commit_needed::true"
+          else
+            echo "::set-output name=commit_needed::false"
+          fi
+          
+          git add ${MARKER_FILE}
+      
+      - name: Create Automated Commit (Hidden Comment)
+        if: steps.marker_update.outputs.commit_needed == 'true'
+        run: |
+          git commit -m "Automated daily maintenance: Update hidden marker for freshness"
+          
+      - name: Push the Changes
+        if: steps.marker_update.outputs.commit_needed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
