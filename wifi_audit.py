@@ -1,7 +1,7 @@
 import sys
 import subprocess
 import os
-import re  # Added for regular expressions
+import re
 from utils.helpers import colorful_print
 from modules import scan, handshake, report
 
