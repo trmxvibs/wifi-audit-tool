@@ -1,202 +1,154 @@
-# WiFi Audit Tool — Command Line Wireless Security Toolkit
+# WiFi Audit Tool
 
-<p align="center">
+A command-line wireless security auditing toolkit for Kali Linux. It wraps the standard `aircrack-ng` suite in a menu-driven workflow, adds structured scan output, offline vendor identification, scan history, and JSON/HTML/CSV reporting — so an authorized wireless assessment produces a proper audit trail instead of just terminal scrollback.
 
-<img src="https://img.shields.io/badge/Type-WiFi%20Security%20Toolkit-black?style=for-the-badge">
-<img src="https://img.shields.io/badge/Platform-Kali%20Linux-red?style=for-the-badge">
-<img src="https://img.shields.io/badge/Interface-CLI-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/Use-Authorized%20Testing-green?style=for-the-badge">
-
-<br>
-
-<img src="https://img.shields.io/github/actions/workflow/status/trmxvibs/wifi-audit-tool/python-app.yml?branch=main&style=for-the-badge">
-<img src="https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python">
-<img src="https://img.shields.io/github/license/trmxvibs/wifi-audit-tool?style=for-the-badge">
-<img src="https://img.shields.io/github/issues/trmxvibs/wifi-audit-tool?style=for-the-badge">
-
-</p>
+[![Tests](https://img.shields.io/github/actions/workflow/status/trmxvibs/wifi-audit-tool/python-app.yml?branch=main&label=tests)](https://github.com/trmxvibs/wifi-audit-tool/actions)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/github/license/trmxvibs/wifi-audit-tool)](LICENSE)
 
 ---
 
-## Overview
+## ⚠️ Authorization required
 
-WiFi Audit Tool is a command-line wireless security toolkit built for Kali Linux environments. It is designed to streamline authorized wireless network assessments through an interactive menu-driven workflow.
-
-The tool automates common audit steps such as enabling monitor mode, scanning nearby networks, and preparing WPA/WPA2 handshake capture sessions using standard aircrack-ng utilities.
+This tool is for **authorized security testing only** — networks you own, networks you are contracted to test, or a controlled lab environment. Running scans or capture operations against networks without explicit written permission may violate the law. The author and contributors are not responsible for misuse.
 
 ---
 
-## Authorization Requirement
+## What it does
 
-<img src="https://img.shields.io/badge/Authorization-Required-critical?style=for-the-badge">
-
-This tool is intended strictly for **authorized security testing**.
-
-Running scans or capture operations against networks without explicit written permission may violate laws and regulations. The author and contributors are not responsible for misuse or resulting damage.
-
-Allowed use cases:
-
-- Networks you own
-- Networks you are contracted to test
-- Controlled lab environments
-
----
-
-## Core Features
-
-<img src="https://img.shields.io/badge/Feature-Monitor%20Mode%20Automation-informational?style=flat-square">
-
-Automatically enables and disables monitor mode on the selected wireless adapter.
-
-<img src="https://img.shields.io/badge/Feature-Network%20Scanning-informational?style=flat-square">
-
-Discovers nearby wireless networks using airodump-ng.
-
-<img src="https://img.shields.io/badge/Feature-Handshake%20Capture-informational?style=flat-square">
-
-Targets a selected BSSID and channel to capture WPA/WPA2 handshakes.
-
-<img src="https://img.shields.io/badge/Feature-Crack%20Command%20Helper-informational?style=flat-square">
-
-Generates ready-to-run cracking commands for offline analysis tools.
-
----
-
-## Dependencies
-
-<img src="https://img.shields.io/badge/Backend-Aircrack--ng-important?style=flat-square">
-<img src="https://img.shields.io/badge/Tool-iw-important?style=flat-square">
-<img src="https://img.shields.io/badge/Access-root-important?style=flat-square">
-
-Required components:
-
-- Python 3.8 or higher
-- aircrack-ng suite
-- airodump-ng
-- iw
-- iproute2
-- Kali Linux or compatible distribution
+- **Scans nearby networks** via `airodump-ng`, either as a live terminal view or as a timed, structured scan you can act on programmatically.
+- **Identifies device vendors** offline from each BSSID's OUI prefix (no internet call needed in the field).
+- **Flags weak security** — open networks, WEP, WPA (non-WPA2/3), and WPA2 with WPS enabled — with a plain-language explanation of the risk.
+- **Logs every scan** to a local history file, so you can track a network's posture over time.
+- **Compares two scans** to show what's new, what disappeared, and whether any network's security got weaker or stronger since last time.
+- **Exports reports** as JSON, HTML, or CSV.
+- **Captures WPA/WPA2 handshakes** against a chosen BSSID/channel, and generates the matching `aircrack-ng` command for offline analysis.
+- **Runs interactively or non-interactively** — the same tool works as a guided menu or as a scriptable CLI for automation.
+- **Remembers your defaults** (interface, scan duration, export format) via a small local config file.
 
 ---
 
 ## Installation
 
-### Clone Repository
-
 ```bash
 git clone https://github.com/trmxvibs/wifi-audit-tool.git
 cd wifi-audit-tool
-```
-
-### Make Installer Executable
-
-```bash
 chmod +x install.sh
-```
-
-### Install Dependencies
-
-```bash
 ./install.sh
 ```
+
+`install.sh` installs `aircrack-ng`, `python3-pip`, and this project's Python dependencies. It uses `--break-system-packages` for the pip install, which is required on modern Kali/Debian (PEP 668) since this tool needs to run as root alongside `aircrack-ng` rather than in an isolated virtualenv.
+
+**Requirements:**
+- Python 3.8+
+- `aircrack-ng` suite (`airodump-ng`, `aireplay-ng`)
+- `iw`, `iproute2`
+- Kali Linux or a compatible distribution
+- A wireless adapter that supports monitor mode (see [Hardware](#hardware) below)
 
 ---
 
 ## Usage
 
-Run with root privileges:
+### Interactive mode
 
 ```bash
 sudo python3 wifi_audit.py
 ```
 
-An interactive menu will guide adapter selection, scanning, and capture setup.
-
----
-
-## Example Authorized Audit Workflow
-
-Typical permitted lab workflow:
-
-1. Select wireless adapter
-2. Enable monitor mode
-3. Scan nearby access points
-4. Choose target BSSID and channel
-5. Start capture session
-6. Verify handshake capture
-7. Perform offline password audit using external tools
-
-Example: testing your own lab router to verify password strength and capture reliability.
-
----
-
-## Common Error: No Interfaces Detected
-
-Error:
-
 ```
-Error detecting interfaces: Command ['iw', 'dev'] returned non-zero exit status 1
+==== WiFi Auditing Tool (Kali Edition) ====
+1) Scan WiFi Networks (live view)
+2) Timed Scan + Security Analysis (structured, with vendor lookup)
+3) Capture Handshake
+4) Vulnerability Report / Crack
+5) Scan History (from disk, persists across runs)
+6) Export Last Scan Report (JSON/HTML/CSV)
+7) Compare Last Scan to Previous Scan
+8) Configure Defaults (interface, scan duration, export format)
+9) Guidelines & Help
+10) Exit
 ```
 
-### Cause
+### Non-interactive / scripted mode
 
-Occurs when running Kali inside Android/Termux or NetHunter guest mode. The host OS blocks direct access to the internal WiFi chipset.
+For automation or scheduled audits, skip the menu entirely:
 
-### Fix
+```bash
+sudo python3 wifi_audit.py --scan-duration 30 --iface wlan0mon --export report.json
+```
 
-Use external hardware.
+| Flag | Description |
+|---|---|
+| `--scan-duration SECONDS` | Runs a timed scan, analyzes it, then exits (no menu). |
+| `--iface IFACE` | Wireless interface to use. Defaults to the first detected interface. |
+| `--export PATH` | Export path. Format is chosen by extension: `.json`, `.html`, or `.csv`. |
 
----
-
-## Required Hardware
-
-<img src="https://img.shields.io/badge/Hardware-External%20USB%20Adapter-required?style=flat-square">
-
-You need:
-
-- OTG adapter
-- External USB WiFi adapter
-- Monitor mode supported chipset
-
-Supported chipsets:
-
-- Atheros AR9271
-- Ralink RT5370
+Every scan — interactive or scripted — is automatically logged to `scan_history.jsonl`, so `Compare Last Scan to Previous Scan` works regardless of which mode you used.
 
 ---
 
-## Recommended Environment
+## Example authorized workflow
 
-<img src="https://img.shields.io/badge/Environment-Native%20Kali-success?style=flat-square">
-
-Best reliability:
-
-- Native Kali Linux
-- Kali Live USB
-- Kali VM with USB passthrough
-- Dedicated test adapter
+1. Run a timed scan against your lab network (option 2).
+2. Review the security findings — open networks and WEP are flagged HIGH severity.
+3. Export the report (option 6) to hand off or archive.
+4. A week later, scan again and use **Compare** (option 7) to see if anything changed — a network that quietly dropped from WPA2 to open, for example.
+5. If a target needs a deeper look, capture its handshake (option 3) and generate the offline crack command (option 4).
 
 ---
+
+## Hardware
+
+Most built-in laptop WiFi chipsets don't support monitor mode, and phone-hosted Kali (Termux/NetHunter) generally can't access the internal chipset at all. You'll need an external adapter:
+
+- A USB WiFi adapter with a monitor-mode-capable chipset (e.g. Atheros AR9271, Ralink RT5370)
+- An OTG adapter, if running from a phone
+
+**Best reliability:** native Kali Linux, a Kali Live USB, or a Kali VM with USB passthrough to a dedicated test adapter.
+
+If you see `Error detecting interfaces: Command ['iw', 'dev'] returned non-zero exit status 1`, this is almost always the host OS blocking direct chipset access (common in Android/Termux/NetHunter guest mode) — switch to external hardware.
+
+---
+
+## Project layout
+
+```
+wifi_audit.py            # entry point — interactive menu + CLI argument parsing
+modules/
+  scan.py                # airodump-ng wrapper + CSV output parsing
+  handshake.py            # handshake capture
+  report.py               # JSON/HTML/CSV export, crack-command generation
+  history.py               # persistent JSONL scan history
+  compare.py                # scan-to-scan diffing
+utils/
+  helpers.py               # colored output, validated input prompts
+  ai_helper.py              # rule-based security classifier (not ML-based — see docstring)
+  vendor.py                  # offline BSSID -> vendor lookup
+  config.py                   # local defaults file
+tests/                        # pytest suite (42 tests) covering every module above
+```
+
+---
+
+## Testing
+
+```bash
+pip install -r requirements.txt --break-system-packages
+PYTHONPATH=. pytest
+```
+
+CI runs this suite plus `flake8` on every push via GitHub Actions.
 
 ---
 
 ## Author
 
-<img src="https://img.shields.io/badge/Author-Lokesh%20Kumar-black?style=for-the-badge">
-<img src="https://img.shields.io/badge/Role-Security%20Researcher-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/Focus-WiFi%20Auditing-red?style=for-the-badge">
+**Lokesh Kumar** — independent security enthusiast focused on wireless security testing, Kali Linux tooling, and command-line automation.
 
-Independent security enthusiast focused on wireless security testing, Kali Linux tooling, and practical command-line automation.
+- GitHub: [@trmxvibs](https://github.com/trmxvibs)
+- YouTube: [@termux2](https://youtube.com/@termux2)
 
-### Contact
+### Contributing
 
-
-### GitHub: [Lokesh-Kumar](https://github.com/trmxvibs)
-### YouTube: [Lokesh-Kumar](https://youtube.com/@termux2)
-
-### Contributions
-
-Pull requests, issue reports, and security improvement suggestions are welcome.  
-For major changes, open an issue first to discuss the proposal.
-
----
+Issues and pull requests are welcome. For significant changes, please open an issue first to discuss what you'd like to change.
