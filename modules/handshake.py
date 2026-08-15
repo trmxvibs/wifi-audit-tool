@@ -1,6 +1,6 @@
 import subprocess
-import sys
 from utils.helpers import colorful_print
+
 
 def start(iface):
     """Starts the handshake capture process."""
